@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TypeController extends Controller
@@ -60,7 +61,6 @@ class TypeController extends Controller
         //
         $data = $type;
         return view('type.formedit', compact('data'));
-
     }
 
     /**
@@ -84,6 +84,8 @@ class TypeController extends Controller
         //
 //        $deletedData = $type;
 //        dd($deletedData);
+        $user=Auth::user();
+        $this->authorize('delete-permission',$user);
 
         try {
           $deletedData = $type;
@@ -96,5 +98,16 @@ class TypeController extends Controller
           return redirect()->route('type.index')->with('status',$msg);
         }
 
+    }
+
+    public function getEditForm(Request $request)
+    {
+        $id = $request->id;
+        $data = Type::find($id);
+//        dd($edit);
+        return response()->json(array(
+                  'status' => 'oke',
+          'msg' => view('type.getEditForm', compact('data'))->render()
+        ),200);
     }
 }

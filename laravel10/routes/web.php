@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\TransactionController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TypeController;
@@ -18,33 +19,57 @@ use App\Http\Controllers\HotelController;
 */
 
 Route::get('/', function () {
-    return view('dashboard', ['name'=> 'vincent']);
+    return view('welcome');
 });
 
-// Route::view('/kategori', 'kategori.index');
+Auth::routes();
+
+
+Route::get('/dashboard', function (){
+    return view('dashboard');
+});
 
 Route::get('/kategori/{index}', function($index){
     return view('kategori.standarddouble', ['index' => [0,1,2,3]]);
 })->name('getDetail');
 
-//Route::resource('kategori', TypeController::class);
-
-Route::resource('product', ProductController::class);
 Route::resource('hotel', HotelController::class);
-Route::resource('transaction', TransactionController::class);
-Route::resource('type', TypeController::class);
-Route::resource('customer', CustomerController::class);
+
+Route::middleware(['auth'])->group(function(){
+    Route::resource('product', ProductController::class);
+    Route::resource('transaction', TransactionController::class);
+    Route::resource('customer', CustomerController::class);
+});
+
+Route::resource('type', TypeController::class)->middleware('auth');
+
 
 Route::get('report/availablehotelrooms', [HotelController::class, 'availablehotelroom']);
 Route::get('report/hotel/avgPriceByHotelType', [HotelController::class, 'averagePriceByHotelType']);
 Route::view('/dashboard','dashboard')->name('dashboard');
-
 Route::view('/ajaxExample', 'hotel.ajax');
 Route::post("/hotel/showInfo",[HotelController::class, 'showInfo'])->name("hotels.showInfo");
 Route::post('/hotel/showProducts',[HotelController::class,'showProducts'])->name('hotel.showProducts');
-
 Route::post('transaction/showDataAjax/', [TransactionController::class, 'showAjax'])->name('transaction.showAjax');
 
+
+//CRUD MODAL AND AJAX WEEK 11
+Route::post('customtype/getEditForm',[TypeController::class,'getEditForm'])->name('type.getEditForm');
+
+
+
+
+//UPLOAD GAMBAR WEEK 13
+Route::get('hotel/uploadLogo/{hotel_id}', [HotelController::class, 'uploadLogo']);
+Route::post('hotel/simpanLogo', [HotelController::class, 'simpanLogo']);
+
+Route::get('hotel/uploadPhoto/{hotel_id}', [HotelController::class, 'uploadPhoto']);
+Route::post('hotel/simpanPhoto', [HotelController::class, 'simpanPhoto']);
+
+Route::get('product/uploadProduct/{product_id}', [ProductController::class, 'uploadProduct']);
+Route::post('product/simpanProduct', [ProductController::class, 'simpanProduct']);
+Route::post('product/delProduct', [ProductController::class, 'delProduct']);
+//
 
 // Route::resource('hotel.view', HotelController::class);
 
@@ -92,3 +117,7 @@ Route::post('transaction/showDataAjax/', [TransactionController::class, 'showAja
 //     return view('welcome', ['name' => 'Vincent']);
 // });
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

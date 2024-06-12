@@ -27,7 +27,7 @@
 </div>
     <div class="page-content">
         <!-- BEGIN PAGE HEADER-->
-        
+
         <h3 class="page-title">
             Hotel
         </h3>
@@ -45,8 +45,8 @@
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <a href="#" onclick="showInfo()">
                   <i class="icon-bulb"></a></i>
-               </li>        
-  
+               </li>
+
             </ul>
             <div class="page-toolbar">
                 <div id="dashboard-report-range" class="pull-right tooltips btn btn-fit-height btn-primary" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
@@ -63,9 +63,8 @@
     <thead>
       <tr>
         <th>id</th>
-        {{-- <th>created_at</th>
-        <th>updated_at</th> --}}
         <th>name</th>
+          <th>Logo Hotel</th>
         <th>address</th>
         <th>postcode</th>
         <th>city</th>
@@ -80,12 +79,20 @@
         {{-- <td>{{$data ->created_at}}</td>
         <td>{{$data ->updated_at}}</td> --}}
         <td>{{$data ->name}}</td>
-        <td>{{$data ->address}}</td>
+          <td>
+              <img height='100px' src="{{ asset('/logo/'.$data->id.'.jpg')}}"/><br>
+              <a href="{{ url('hotel/uploadLogo/'.$data->id) }}">
+                  <button class='btn btn-xs btn-default'>upload</button></a><br>
+              <img height='100px' src="{{ asset('/images/'.$data->image)}}"/><br>
+              <a href="{{ url('hotel/uploadPhoto/'.$data->id) }}">
+                  <button class='btn btn-xs btn-default'>upload Database</button></a>
+          </td>
+          <td>{{$data ->address}}</td>
         <td>{{$data ->postcode}}</td>
         <td>{{$data ->city}}</td>
         <td>
           <a class="btn btn-info"  href="#detail_{{$data->id}}" data-toggle="modal">{{ $data->name }}</a>
-  
+
                     <div class="modal fade" id="detail_{{$data->id}}" tabindex="-1" role="basic" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">

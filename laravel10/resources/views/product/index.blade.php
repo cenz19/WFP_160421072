@@ -34,8 +34,9 @@
                 <thead>
                 <tr>
                     <th>id</th>
-                    <th>created_at</th>
-                    <th>updated_at</th>
+{{--                    <th>created_at</th>--}}
+{{--                    <th>updated_at</th>--}}
+                    <th>Product Image(s)</th>
                     <th>name</th>
                     <th>price</th>
                     <th>hotel_id</th>
@@ -46,8 +47,22 @@
                   @foreach ($queryModel as $data)
                   <tr>
                     <td>{{$data ->id}}</td>
-                    <td>{{$data ->created_at}}</td>
-                    <td>{{$data ->updated_at}}</td>
+                      <td>
+                          @if($data->filenames)
+                              @foreach ($data->filenames as $filename)
+                                  <img width="100" height="100" src="{{asset('product_image/'.$data->id.'/'.$filename)}}"/>
+                                  <form style="display: inline" method="POST"
+                                        action="{{url('product/delProduct')}}">
+                                      @csrf
+                                      <input type="hidden" value="{{'product_image/'.$data->id.'/'.$filename}}" name='filepath' />
+                                      <input type="submit" value="delete" class="btn btn-danger btn-xs"
+                                             onclick="return confirm('Are you sure ? ');">
+                                  </form>
+                                  <br>
+                              @endforeach
+                          @endif
+                          <a href="{{ url('product/uploadProduct/'.$data->id) }}" class="btn btn-success btn-xs">Add new Picture</a>
+                      </td>
                     <td>{{$data ->name}}</td>
                     <td>{{$data ->price}}</td>
                     <td>{{$data ->hotel_id}}</td>
